@@ -1,5 +1,10 @@
+import { Header } from "./Components/Header/Index";
+import './global.css'
+
 export function App() {
   return (
-    <h1>Hello World</h1>
+    <>
+      <Header/>
+    </>
   )
 }
