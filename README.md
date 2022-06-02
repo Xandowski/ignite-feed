@@ -4,7 +4,7 @@
         <span align="center">Ignite Feed</span>
     </div>
     <br/>
-    <p align="center">Application build during the ignite course by [Rocketseat](https://rocketseat.com.br/) 🚀.</p>
+    <p align="center">Application build during the ignite course by <a href="https://rocketseat.com.br">Rocketseat</a> 🚀.</p>
 
 <button style="
     background:#00875f;
@@ -24,6 +24,10 @@
 ## About The Project
 
 A simple feed
+
+## Layout
+
+[Figma](https://www.figma.com/community/file/1113573231685349036)
 
 ### Built With
 
