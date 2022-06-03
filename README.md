@@ -6,12 +6,7 @@
     <br/>
     <p align="center">Application build during the ignite course by <a href="https://rocketseat.com.br">Rocketseat</a> 🚀.</p>
 
-<button style="
-    background:#00875f;
-    border:none;
-    border-radius: 4px;
-    width: 90px;
-    height: 30px"><a style="text-decoration:none;color:white;font-weight:bold;" href="https://vercel.com/button">Deploy</a></button>
+[![button](/src//assets/deploy-button.png)](https://vercel.com/)
 
 [![Languages](https://img.shields.io/github/languages/count/xandowski/ignite-feed?color=00875f)]()
 [![RespositorySize](https://img.shields.io/github/repo-size/xandowski/ignite-feed?color=00875f)]()
