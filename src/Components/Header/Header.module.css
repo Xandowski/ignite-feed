@@ -1,0 +1,15 @@
+.header {
+  background-color: var(--gray-800);
+  padding: 1.25rem 0;
+
+  display: flex;
+  justify-content: center;
+
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+
+.header img {
+  height: 2rem;
+  margin-right: 16px;
+}
