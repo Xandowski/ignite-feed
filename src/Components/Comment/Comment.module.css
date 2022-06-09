@@ -1,0 +1,89 @@
+.comment {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.avatar{
+  border-radius: 8px;
+  width: 50px;
+  height: 50px;
+}
+
+.commentBox {
+  flex: 1;
+}
+
+.commentContent {
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: var(--gray-700);
+}
+
+.commentContent > header {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.authorAndTime strong,
+.authorAndTime time {
+  display: block;
+}
+
+.authorAndTime strong {
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.authorAndTime time {
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--gray-400);
+}
+
+.delete {
+  background-color: transparent;
+  border: 0;
+  border-radius: 2px;
+  color: var(--red-400);
+  line-height: 0;
+  transition: color 0.2s;
+}
+
+.delete:hover {
+  color: var(--red-500);
+}
+
+.commentContent p {
+  margin-top: 1rem;
+  color: var(--gray-300);
+}
+
+.commentBox > footer {
+  margin-top: 1rem;
+}
+
+.like{
+  background-color: transparent;
+  border: 0;
+  color: var(--gray-400);
+  display: flex;
+  align-items: center;
+
+  transition: color 0.2s;
+}
+
+.like:hover {
+  color: var(--green-400);
+}
+
+.like svg {
+  margin-right: 0.5rem;
+}
+
+.like span::before {
+  content: "\2022";
+  padding: 0 0.25rem;
+}
