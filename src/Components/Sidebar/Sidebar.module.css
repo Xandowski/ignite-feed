@@ -35,6 +35,8 @@
   border-top: 1px solid var(--gray-700);
   padding: 1.5rem 2rem 2rem;
   margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
 }
 
 .sidebar footer a {
