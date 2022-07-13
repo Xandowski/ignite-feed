@@ -1,15 +1,39 @@
 .header {
   background-color: var(--gray-800);
-  padding: 1.25rem 0;
+  padding: 1.25rem 9rem;
 
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
 
   font-weight: 700;
   font-size: 1.6rem;
 }
 
-.header img {
+.header div {
+  display: flex;
+  align-items: center;
+}
+
+.header div img {
   height: 2rem;
   margin-right: 16px;
+}
+
+.header div span {
+  font-size: 1.2rem;
+}
+
+.header button {
+  padding: 0 3.1rem;
+  border: 0;
+  height: 50px;
+  background-color: var(--green-500);
+  border-radius: 8px;
+  color: var(--white);
+  font-weight: 700;
+  transition: color 0.5s, background-color 0.5s;
+}
+
+.header button:hover {
+  background-color: var(--green-400);
 }
