@@ -1,21 +1,15 @@
-import { Header } from "./Components/Header/Index";
-import { Sidebar } from "./Components/Sidebar/Index";
+import { Auth0Provider } from "@auth0/auth0-react"
+import { Home } from "./pages/Home"
 
-import './global.css'
-import styles from './App.module.css'
-import { Post } from "./Components/Post/Index";
-
-export function App() {
+export const App = () => {
   return (
-    <>
-      <Header/>
-      <div className={styles.wrapper}>
-        <Sidebar/>
-        <main>
-          <Post/>
-          <Post/>
-        </main>
-      </div>
-    </>
+    <Auth0Provider
+      domain={import.meta.env.VITE_AUTH0_DOMAIN}
+      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
+      redirectUri={import.meta.env.VITE_REDIRECT_URL}
+    >
+      <Home />
+    </Auth0Provider>
+
   )
 }
