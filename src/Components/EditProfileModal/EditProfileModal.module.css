@@ -1,0 +1,50 @@
+.hero{
+  height: 72px;
+  width: 100%;
+  object-fit: cover;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-top: calc(0px - 1.5rem - 6px);
+}
+
+.content img {
+  margin-bottom: 1.25rem;
+}
+
+.content label {
+  display: flex;
+}
+
+.content label:nth-child(2){
+  margin-bottom: 0.5rem;
+}
+
+.content label input{
+  padding: 0.5rem;
+  border: 0;
+}
+
+.formContent footer {
+  border-top: 1px solid var(--gray-700);
+  padding: 1.5rem 2rem 2rem;
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.formContent footer button {
+  padding: 0 1.5rem;
+  height: 50px;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  border: 2px solid var(--green-500);
+  color: var(--green-500);
+  gap: 0.5rem;
+  transition: color 0.5s, background-color 0.5s;
+}
