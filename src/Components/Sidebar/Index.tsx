@@ -1,10 +1,18 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { PencilLine } from 'phosphor-react'
+import { useState } from 'react'
 import { Avatar } from '../Avatar/Index'
 import styles from './Sidebar.module.css'
 
-export function Sidebar() {
+interface SidebarProps {
+  onOpenEditProfileModal: () => void
+  name: string
+  role: string
+}
+
+export function Sidebar({ onOpenEditProfileModal, name, role }: SidebarProps) {
   const { user, isAuthenticated } = useAuth0()
+
   return (
     isAuthenticated && (
       <aside className={styles.sidebar}>
@@ -12,18 +20,18 @@ export function Sidebar() {
 
         <section>
           <Avatar
-            src='https://github.com/xandowski.png'
+            src={user?.picture || ``}
             alt='foto de perfil'
           />
-          <strong>Alexandre Morais</strong>
-          <span>Frontend Developer</span>
+          <strong>{name}</strong>
+          <span>{role}</span>
         </section>
 
         <footer>
-          <a href="">
+          <button onClick={onOpenEditProfileModal}>
             <PencilLine size={20} />
             <span>Editar perfil</span>
-          </a>
+          </button>
         </footer>
       </aside>
     )

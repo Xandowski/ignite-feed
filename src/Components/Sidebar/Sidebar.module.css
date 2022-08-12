@@ -39,7 +39,7 @@
   justify-content: center;
 }
 
-.sidebar footer a {
+.sidebar footer button {
   padding: 0 1.5rem;
   height: 50px;
   background-color: transparent;
@@ -52,7 +52,7 @@
   transition: color 0.5s, background-color 0.5s;
 }
 
-.sidebar footer a:hover {
+.sidebar footer button:hover {
   color: var(--white);
   background-color: var(--green-500);
 }
