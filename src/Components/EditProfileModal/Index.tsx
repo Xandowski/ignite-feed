@@ -3,6 +3,7 @@ import Modal from "react-modal"
 import { Avatar } from '../Avatar/Index'
 import { useAuth0 } from '@auth0/auth0-react'
 import { PencilLine } from 'phosphor-react'
+import { FormEvent, useEffect, useState } from 'react'
 
 Modal.setAppElement('#root')
 
@@ -14,6 +15,19 @@ interface EditProfileModalProps {
 
 export function EditProfileModal({ isOpen, onRequestClose }: EditProfileModalProps) {
   const { user } = useAuth0()
+  const [name, setName] = useState('')
+
+  const handleEditProfile = () => {
+
+  }
+
+  useEffect(() => {
+    if (user?.nickname) {
+      setName(user?.nickname)
+    }
+    return
+  }, [user])
+
   return (
     <Modal
       isOpen={isOpen}
@@ -23,7 +37,7 @@ export function EditProfileModal({ isOpen, onRequestClose }: EditProfileModalPro
     >
       <img className={styles.hero} src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=40" />
 
-      <form action="" className={styles.formContent}>
+      <form onSubmit={handleEditProfile} className={styles.formContent}>
         <section className={styles.content}>
           <Avatar
             src={user?.picture || ``}
@@ -31,7 +45,9 @@ export function EditProfileModal({ isOpen, onRequestClose }: EditProfileModalPro
           />
 
           <label htmlFor="name">
-            <input type="text" name='name' placeholder='Nome' required />
+            <input type="text" name='name' id="name" placeholder='Nome' required value={name}
+              onChange={event => setName((event.target as HTMLInputElement).value)}
+            />
             {/* <abbr title="campo obrigatório">*</abbr> */}
           </label>
 
@@ -52,5 +68,3 @@ export function EditProfileModal({ isOpen, onRequestClose }: EditProfileModalPro
     </Modal>
   )
 }
-
-//TODO criar o layout do modal
