@@ -108,7 +108,7 @@
   max-height: none;
 }
 
-.commentForm > button[type=submit] {
+.commentForm > footer button[type=submit] {
   padding: 1rem 1.5rem;
   margin-top: 1rem;
   background-color: var(--green-500);
@@ -119,7 +119,7 @@
   transition: background-color 0.5s;
 }
 
-.commentForm > button:hover {
+.commentForm > footer button[type=submit]:hover {
   background-color: var(--green-400);
 }
 

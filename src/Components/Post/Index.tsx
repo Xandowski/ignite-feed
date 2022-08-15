@@ -1,51 +1,132 @@
+import { useAuth0 } from '@auth0/auth0-react'
+import { format, formatDistanceToNow } from 'date-fns'
+import ptBR from 'date-fns/esm/locale/pt-BR'
+import { FormEvent, useEffect, useState } from 'react'
+import { api } from '../../services/api'
 import { Avatar } from '../Avatar/Index'
 import { Comment } from '../Comment/Index'
 import styles from './Post.module.css'
 
-export function Post() {
+export interface Comments {
+  author: {
+    avatarUrl: string
+    name: string
+    role: string
+  },
+  content: string,
+  publishedAt: string,
+}
+
+export interface Posts {
+  id?: string
+  author: {
+    avatarUrl: string
+    name: string
+    role: string
+  }
+  content: [
+    { type: string, content: string | [string] }
+  ],
+  publishedAt: string
+}
+
+export function Post({ id, author, content, publishedAt }: Posts) {
+  const [postComments, setPostComments] = useState<Comments[]>([])
+  const publishedDateFormatted = format(Date.parse(publishedAt), "d 'de' LLLL 'às' HH:mm'h'",
+    { locale: ptBR })
+  const publishedDateRelativeToNow = formatDistanceToNow(Date.parse(publishedAt), {
+    locale: ptBR,
+    addSuffix: true
+  })
+  const { user, isAuthenticated } = useAuth0()
+  const [newComment, setNewComment] = useState('')
+  const [hasSubimitComment, setHasSubmitComment] = useState(false)
+
+  useEffect(() => {
+    api.get(`posts/${id}/comments`)
+      .then(response => setPostComments(response.data.comments))
+  }, [hasSubimitComment])
+
+  function handleNewCommentChange(event: FormEvent) {
+    setNewComment(event.target.value)
+  }
+
+  function handleCreateNewComment(event: FormEvent) {
+    event.preventDefault()
+    setHasSubmitComment(false)
+
+    const data = {
+      author: {
+        avatarUrl: user?.picture,
+        name: user?.name,
+        role: ''
+      },
+      content: newComment,
+      publishedAt: new Date()
+      // publishedAt: new Date('2022-06-10T20:55:12').toISOString()
+    }
+    api.post(`posts/${id}/comments`, data)
+
+    setNewComment('')
+    setHasSubmitComment(true)
+  }
+
   return (
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
           <Avatar
-            src='https://github.com/xandowski.png'
+            src={author.avatarUrl}
             alt='foto de perfil'
           />
           <div className={styles.authorInfo}>
-            <strong>Username</strong>
-            <span>Position</span>
+            <strong>{author.name}</strong>
+            <span>{author.role}</span>
           </div>
         </div>
 
-        <time title="05 de Junho às 23:44h" dateTime="2022-06-05">Publicado há 1h</time>
+        <time title={publishedDateFormatted} dateTime={publishedAt}>
+          {publishedDateRelativeToNow}
+        </time>
       </header>
 
       <section className={styles.content}>
-        <p>Fala galeraa</p>
-
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil fugiat aspernatur dolorum corporis, consequuntur delectus accusamus id dolor laborum pariatur saepe cupiditate reprehenderit voluptas ex.</p>
-
-        <p><a href="">link para algo</a></p>
-        <p>
-          <a href="">#frontend</a>
-          <a href="">#react</a>
-        </p>
+        {content.map((row) => {
+          if (row.type === 'paragraph') {
+            return <p>{row.content}</p>
+          } else if (row.type === 'link') {
+            return <a>{row.content}</a>
+          } else {
+            return <p>
+              {Array.isArray(row.content) && row.content.map((link) => {
+                return <a href="">{link}</a>
+              })}
+            </p>
+          }
+        })}
       </section>
 
-      <form className={styles.commentForm}>
+      <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Deixe seu feedback</strong>
 
         <textarea
+          name='comment'
+          value={newComment}
           placeholder="Deixe um comentário"
+          onChange={handleNewCommentChange}
         />
 
         <footer>
-          <button type="submit">Publicar</button>
-        </footer>       
+          {isAuthenticated && <button type="submit">Publicar</button>}
+        </footer>
       </form>
-      
+
       <div className={styles.commentList}>
-        <Comment/>
+        {postComments?.map((comment) => {
+          return (
+            <Comment comment={comment} />
+          )
+        })}
       </div>
     </article>
   )
