@@ -32,6 +32,11 @@
   display: block;
 }
 
+.authorAndTime strong span {
+  line-height: 1.6;
+  color: var(--gray-400);
+}
+
 .authorAndTime strong {
   font-size: 0.875rem;
   line-height: 1.6;
