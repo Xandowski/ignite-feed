@@ -24,14 +24,15 @@ export interface Posts {
     name: string
     role: string
   }
+  publishedAt: string
+  comments: Comments[]
   content: [
     { type: string, content: string | [string] }
-  ],
-  publishedAt: string
+  ]
 }
 
-export function Post({ id, author, content, publishedAt }: Posts) {
-  const [postComments, setPostComments] = useState<Comments[]>([])
+export function Post({ id, author, publishedAt, comments, content }: Posts) {
+  const [postComments, setPostComments] = useState(comments)
   const publishedDateFormatted = format(Date.parse(publishedAt), "d 'de' LLLL 'às' HH:mm'h'",
     { locale: ptBR })
   const publishedDateRelativeToNow = formatDistanceToNow(Date.parse(publishedAt), {
@@ -40,35 +41,13 @@ export function Post({ id, author, content, publishedAt }: Posts) {
   })
   const { user, isAuthenticated } = useAuth0()
   const [newComment, setNewComment] = useState('')
-  const [hasSubimitComment, setHasSubmitComment] = useState(false)
-
-  useEffect(() => {
-    api.get(`posts/${id}/comments`)
-      .then(response => setPostComments(response.data.comments))
-  }, [hasSubimitComment])
 
   function handleNewCommentChange(event: FormEvent) {
     setNewComment(event.target.value)
   }
 
   function handleCreateNewComment(event: FormEvent) {
-    event.preventDefault()
-    setHasSubmitComment(false)
 
-    const data = {
-      author: {
-        avatarUrl: user?.picture,
-        name: user?.name,
-        role: ''
-      },
-      content: newComment,
-      publishedAt: new Date()
-      // publishedAt: new Date('2022-06-10T20:55:12').toISOString()
-    }
-    api.post(`posts/${id}/comments`, data)
-
-    setNewComment('')
-    setHasSubmitComment(true)
   }
 
   return (
