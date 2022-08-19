@@ -3,30 +3,25 @@ import Modal from "react-modal"
 import { Avatar } from '../Avatar/Index'
 import { useAuth0 } from '@auth0/auth0-react'
 import { PencilLine } from 'phosphor-react'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent } from 'react'
 
 Modal.setAppElement('#root')
 
 interface EditProfileModalProps {
   isOpen: boolean
   onRequestClose: () => void
+  setRole: React.Dispatch<React.SetStateAction<string>>
+  name: string
+  setName: React.Dispatch<React.SetStateAction<string>>
 }
 
 
-export function EditProfileModal({ isOpen, onRequestClose }: EditProfileModalProps) {
+export function EditProfileModal({ isOpen, onRequestClose, setRole, name, setName }: EditProfileModalProps) {
   const { user } = useAuth0()
-  const [name, setName] = useState('')
 
-  const handleEditProfile = () => {
-
+  const handleEditProfile = (e: FormEvent) => {
+    e.preventDefault()
   }
-
-  useEffect(() => {
-    if (user?.nickname) {
-      setName(user?.nickname)
-    }
-    return
-  }, [user])
 
   return (
     <Modal
@@ -52,7 +47,9 @@ export function EditProfileModal({ isOpen, onRequestClose }: EditProfileModalPro
           </label>
 
           <label htmlFor="role">
-            <input type="text" name="role" placeholder='Cargo' />
+            <input type="text" name="role" placeholder='Cargo'
+              onChange={event => setRole((event.target as HTMLInputElement).value)}
+            />
           </label>
         </section>
 
