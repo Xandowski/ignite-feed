@@ -29,9 +29,11 @@ export interface Posts {
   content: [
     { type: string, content: string | [string] }
   ]
+  name: string
+  role: string
 }
 
-export function Post({ id, author, publishedAt, comments, content }: Posts) {
+export function Post({ id, author, publishedAt, comments, content, name, role }: Posts) {
   const [postComments, setPostComments] = useState(comments)
   const publishedDateFormatted = format(Date.parse(publishedAt), "d 'de' LLLL 'às' HH:mm'h'",
     { locale: ptBR })
@@ -40,14 +42,26 @@ export function Post({ id, author, publishedAt, comments, content }: Posts) {
     addSuffix: true
   })
   const { user, isAuthenticated } = useAuth0()
-  const [newComment, setNewComment] = useState('')
+  const [newComment, setNewComment] = useState<Comments>()
 
   function handleNewCommentChange(event: FormEvent) {
-    setNewComment(event.target.value)
+    const comment = {
+      author: {
+        avatarUrl: user?.picture,
+        name: name,
+        role: role
+      },
+      content: event.target.value,
+      publishedAt: new Date()
+    }
+    setNewComment(comment)
   }
 
   function handleCreateNewComment(event: FormEvent) {
-
+    event.preventDefault()
+    const comment = postComments
+    comment.push(newComment)
+    setPostComments(comment)
   }
 
   return (
