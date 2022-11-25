@@ -1,4 +1,4 @@
-import { createServer, hasMany, Model } from "miragejs"
+import { belongsTo, createServer, hasMany, Model } from "miragejs"
 
 export default function () {
   createServer({
@@ -7,7 +7,9 @@ export default function () {
         comments: hasMany()
       }),
 
-      comment: Model,
+      comment: Model.extend({
+        post: belongsTo()
+      }),
     },
 
     seeds(server) {
@@ -55,7 +57,7 @@ export default function () {
         publishedAt: new Date('2022-06-09T19:43:12').toISOString(),
         comments: [
           server.create("comment", {
-            id: '2',
+            id: '1',
             author: {
               avatarUrl: 'https://github.com/jakeliny.png',
               name: 'Jakeliny Gracielly',
@@ -84,7 +86,7 @@ export default function () {
         publishedAt: new Date('2022-06-09T21:15:49').toISOString(),
         comments: [
           server.create("comment", {
-            id: '3',
+            id: '1',
             author: {
               avatarUrl: 'https://github.com/maykbrito.png',
               name: 'Mayke Brito',
@@ -94,7 +96,7 @@ export default function () {
             publishedAt: new Date('2022-06-10T19:55:12').toISOString()
           }),
           server.create("comment", {
-            id: '4',
+            id: '2',
             author: {
               avatarUrl: 'https://github.com/diego3g.png',
               name: 'Diego Fernandes',
@@ -124,9 +126,10 @@ export default function () {
       this.post("/posts/:id/comments", (schema, request) => {
         const postId = request.params.id
         const post = schema.posts.find(postId)
-        const data = JSON.parse(request.requestBody)
+        let data = JSON.parse(request.requestBody)
+        data = { ...data, id: (post.comments.length + 1).stringfy }
 
-        return schema.post.createComment(data)
+        return schema.comments.create(data)
       })
 
       this.passthrough("https://ignite-apps.us.auth0.com/login/callback")

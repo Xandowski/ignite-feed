@@ -157,6 +157,8 @@ export function Home() {
                 publishedAt={post.publishedAt}
                 comments={post.comments}
                 content={post.content}
+                name={name}
+                role={role}
               />
             )
           })}

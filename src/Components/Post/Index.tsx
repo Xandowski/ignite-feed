@@ -20,7 +20,7 @@ export interface Comments {
 export interface Posts {
   id?: string
   author: {
-    avatarUrl: string
+    avatarUrl: string | undefined
     name: string
     role: string
   }
@@ -51,7 +51,7 @@ export function Post({ id, author, publishedAt, comments, content, name, role }:
         name: name,
         role: role
       },
-      content: event.target.value,
+      content: (event.target as HTMLInputElement).value,
       publishedAt: new Date()
     }
     setNewComment(comment)
