@@ -1,6 +1,6 @@
 import styles from './Comment.module.css'
 
-import { ThumbsUp, Trash } from "phosphor-react";
+import { FaThumbsUp, FaTrash } from "react-icons/fa";
 import { Avatar } from '../Avatar/Index';
 import { ptBR } from 'date-fns/locale';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -49,7 +49,7 @@ export function Comment({comment}:CommentProps) {
             </div>
 
             <button title="Deletar comentário" className={styles.delete}>
-              <Trash size={24}/>
+              <FaTrash size={20}/>
             </button>
           </header>
 
@@ -58,7 +58,7 @@ export function Comment({comment}:CommentProps) {
 
         <footer>
           <button className={styles.like}>
-            <ThumbsUp size={20}/>
+            <FaThumbsUp size={20}/>
             Aplaudir <span>33</span>
           </button>
 

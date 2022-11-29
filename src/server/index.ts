@@ -1,15 +1,13 @@
-import { belongsTo, createServer, hasMany, Model } from "miragejs"
+import { createServer, Model } from "miragejs"
 
 export default function () {
   createServer({
     models: {
-      post: Model.extend({
-        comments: hasMany()
-      }),
+      post: Model,
 
-      comment: Model.extend({
-        post: belongsTo()
-      }),
+      // comment: Model.extend({
+      //   post: belongsTo()
+      // }),
     },
 
     seeds(server) {
@@ -28,16 +26,14 @@ export default function () {
         ],
         publishedAt: new Date('2022-06-09T20:30:02').toISOString(),
         comments: [
-          server.create("comment", {
-            id: '1',
+           { id: '1',
             author: {
               avatarUrl: 'https://github.com/maykbrito.png',
               name: 'Mayke Brito',
               role: 'Educator @Rocketseat'
             },
             content: 'Boa diegão, mandou bem!!',
-            publishedAt: new Date('2022-06-10T20:01:12').toISOString()
-          })
+            publishedAt: new Date('2022-06-10T20:01:12').toISOString()}
         ]
       })
 
@@ -56,7 +52,7 @@ export default function () {
         ],
         publishedAt: new Date('2022-06-09T19:43:12').toISOString(),
         comments: [
-          server.create("comment", {
+          {
             id: '1',
             author: {
               avatarUrl: 'https://github.com/jakeliny.png',
@@ -65,7 +61,7 @@ export default function () {
             },
             content: 'Boa Maykão, mandou bem!!',
             publishedAt: new Date('2022-06-10T20:15:30').toISOString()
-          })
+          }
         ]
       })
 
@@ -85,7 +81,7 @@ export default function () {
         ],
         publishedAt: new Date('2022-06-09T21:15:49').toISOString(),
         comments: [
-          server.create("comment", {
+          {
             id: '1',
             author: {
               avatarUrl: 'https://github.com/maykbrito.png',
@@ -94,8 +90,8 @@ export default function () {
             },
             content: 'Boa Jake, mandou bem!!',
             publishedAt: new Date('2022-06-10T19:55:12').toISOString()
-          }),
-          server.create("comment", {
+          },
+          {
             id: '2',
             author: {
               avatarUrl: 'https://github.com/diego3g.png',
@@ -104,7 +100,7 @@ export default function () {
             },
             content: 'Boa Jake, mandou bem!!',
             publishedAt: new Date('2022-06-10T20:55:12').toISOString()
-          })
+          }
         ]
       })
     },
@@ -118,20 +114,27 @@ export default function () {
 
       this.get("/posts/:id/comments", (schema, request) => {
         const postId = request.params.id
-        const post = schema.posts.find(postId)
+        // const post = schema.posts.find(postId)
 
-        return post.comments
+        return schema.posts.find(postId)
+        // return post.comments
       })
 
-      this.post("/posts/:id/comments", (schema, request) => {
-        const postId = request.params.id
-        const post = schema.posts.find(postId)
-        let data = JSON.parse(request.requestBody)
-        data = { ...data, id: (post.comments.length + 1).stringfy }
+      this.patch("/posts/:id", (schema, request) => {
+        const id = request.params.id
+        const attrs = this.normalizedRequestAttrs()
 
-        return schema.comments.create(data)
+        return schema.post.find(id).update(attrs)
       })
+      // this.post("/posts/:id/comments", (schema, request) => {
+      //   const id = request.params.id
+      //   const post = schema.posts.find(id)
+      //   let data = JSON.parse(request.requestBody)
+      //   data = { ...data, id: (post.comments.length + 1).stringfy }
 
+      //   return schema.comments.create(data)
+      // })
+      
       this.passthrough("https://ignite-apps.us.auth0.com/login/callback")
       this.passthrough("https://ignite-apps.us.auth0.com/u/login/**")
       this.passthrough("https://ignite-apps.us.auth0.com/u/login")

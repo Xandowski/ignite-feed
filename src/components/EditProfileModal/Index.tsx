@@ -2,7 +2,7 @@ import styles from './EditProfileModal.module.css'
 import Modal from "react-modal"
 import { Avatar } from '../Avatar/Index'
 import { useAuth0 } from '@auth0/auth0-react'
-import { PencilLine } from 'phosphor-react'
+import { TiPencil } from 'react-icons/ti'
 import { FormEvent } from 'react'
 
 Modal.setAppElement('#root')
@@ -55,7 +55,7 @@ export function EditProfileModal({ isOpen, onRequestClose, setRole, name, setNam
 
         <footer>
           <button >
-            <PencilLine size={20} />
+            <TiPencil size={20} />
             <span>Salvar perfil</span>
           </button>
         </footer>

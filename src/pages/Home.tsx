@@ -1,110 +1,17 @@
-import { Header } from "../Components/Header/Index";
-import { Sidebar } from "../Components/Sidebar/Index";
+import { Header } from "../components/Header/Index";
+import { Sidebar } from "../components/Sidebar/Index";
 
 import '../global.css'
 import styles from './Home.module.css'
-import { Post, Posts } from "../Components/Post/Index";
+import { Post, Posts } from "../components/Post/Index";
 import { useEffect, useState } from "react";
 import { api } from "../services/api";
 import { useAuth0 } from "@auth0/auth0-react";
-import { EditProfileModal } from "../Components/EditProfileModal/Index";
+import { EditProfileModal } from "../components/EditProfileModal/Index";
 
 export function Home() {
-  // const [posts, setPosts] = useState<Posts[]>([])
-  const posts = [
-    {
-      id: '1',
-      author: {
-        avatarUrl: 'https://github.com/diego3g.png',
-        name: 'Diego Fernandes',
-        role: 'CTO @Rocketseat'
-      },
-      content: [
-        { type: 'paragraph', content: 'Fala galeraa 👋' },
-        { type: 'paragraph', content: 'Acabei de subir mais um projeto no meu portifa.' },
-        { type: 'link', content: 'jane.design/doctorcare' },
-        { type: 'moreLinks', content: ['#frontend', '#react', 'nodejs'] }
-      ],
-      publishedAt: new Date('2022-06-09T20:30:02').toISOString(),
-      comments: [
-        {
-          id: '1',
-          author: {
-            avatarUrl: 'https://github.com/maykbrito.png',
-            name: 'Mayke Brito',
-            role: 'Educator @Rocketseat'
-          },
-          content: 'Boa diegão, mandou bem!!',
-          publishedAt: new Date('2022-06-10T20:01:12').toISOString()
-        }
-      ]
-    },
-    {
-      id: '2',
-      author: {
-        avatarUrl: 'https://github.com/maykbrito.png',
-        name: 'Mayke Brito',
-        role: 'Educator @Rocketseat'
-      },
-      content: [
-        { type: 'paragraph', content: 'Fala galeraa 👋' },
-        { type: 'paragraph', content: 'Acabei de subir mais um projeto no meu portifa.' },
-        { type: 'link', content: 'jane.design/doctorcare' },
-        { type: 'moreLinks', content: ['#frontend', '#react'] }
-      ],
-      publishedAt: new Date('2022-06-09T19:43:12').toISOString(),
-      comments: [
-        {
-          id: '1',
-          author: {
-            avatarUrl: 'https://github.com/jakeliny.png',
-            name: 'Jakeliny Gracielly',
-            role: 'Educator @Rocketseat'
-          },
-          content: 'Boa Maykão, mandou bem!!',
-          publishedAt: new Date('2022-06-10T20:15:30').toISOString()
-        }
-      ]
-    },
-    {
-      id: '3',
-      author: {
-        avatarUrl: 'https://github.com/jakeliny.png',
-        name: 'Jakeliny Gracielly',
-        role: 'Educator @Rocketseat'
-      },
-      content: [
-        { type: 'paragraph', content: 'Fala galeraa 👋' },
-        { type: 'paragraph', content: 'Acabei de subir mais um projeto no meu portifa.' },
-        { type: 'link', content: 'jane.design/doctorcare' },
-        { type: 'moreLinks', content: ['#frontend', '#react'] },
-      ],
-      publishedAt: new Date('2022-06-09T21:15:49').toISOString(),
-      comments: [
-        {
-          id: '1',
-          author: {
-            avatarUrl: 'https://github.com/maykbrito.png',
-            name: 'Mayke Brito',
-            role: 'Educator @Rocketseat'
-          },
-          content: 'Boa Jake, mandou bem!!',
-          publishedAt: new Date('2022-06-10T19:55:12').toISOString()
-        },
-        {
-          id: '2',
-          author: {
-            avatarUrl: 'https://github.com/diego3g.png',
-            name: 'Diego Fernandes',
-            role: 'CTO @Rocketseat'
-          },
-          content: 'Boa Jake, mandou bem!!',
-          publishedAt: new Date('2022-06-10T20:55:12').toISOString()
-        }
-      ]
-    }
-  ]
-  const { user, isAuthenticated, error } = useAuth0()
+  const [posts, setPosts] = useState<Posts[]>([])
+  const {user, isAuthenticated, error } = useAuth0()
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false)
   const [name, setName] = useState('')
   const [role, setRole] = useState('Cargo')
@@ -125,22 +32,25 @@ export function Home() {
   }, [user])
 
   useEffect(() => {
-    if (isAuthenticated) {
-      console.log(isAuthenticated)
-      return
-    }
-    console.log(error)
-  }, [isAuthenticated])
+    api.get('/posts')
+      .then( res => res.data)
+      .then( data => setPosts(data.posts))
+      .catch(e => {
+        console.error(e.message)
+      })
+  }, [])
 
   return (
     <>
       <Header />
       <div className={isAuthenticated ? styles.wrapper : styles.wrapper_}>
-        <Sidebar
-          onOpenEditProfileModal={handleOpenEditProfileModal}
-          name={name}
-          role={role}
-        />
+        { isAuthenticated && (
+          <Sidebar
+            onOpenEditProfileModal={handleOpenEditProfileModal}
+            name={name}
+            role={role}
+          />
+        )}
         <EditProfileModal
           isOpen={isEditProfileModalOpen}
           onRequestClose={handleCloseEditProfileModal}
@@ -149,10 +59,10 @@ export function Home() {
           setName={setName}
         />
         <main>
-          {posts.map((post) => {
+          {posts.map((post, index) => {
             return (
               <Post
-                key={post.id}
+                key={index}
                 author={post.author}
                 publishedAt={post.publishedAt}
                 comments={post.comments}

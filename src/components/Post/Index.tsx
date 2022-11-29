@@ -43,25 +43,29 @@ export function Post({ id, author, publishedAt, comments, content, name, role }:
   })
   const { user, isAuthenticated } = useAuth0()
   const [newComment, setNewComment] = useState<Comments>()
+  const [comment, setComment] = useState('')
 
   function handleNewCommentChange(event: FormEvent) {
-    const comment = {
+    const comment = (event.target as HTMLTextAreaElement).value
+    setComment(comment)
+  }
+
+  function handleCreateNewComment(event: FormEvent) {
+    event.preventDefault()
+    const commentUser = {
       author: {
         avatarUrl: user?.picture,
         name: name,
         role: role
       },
-      content: (event.target as HTMLInputElement).value,
+      content: comment,
       publishedAt: new Date()
     }
-    setNewComment(comment)
-  }
-
-  function handleCreateNewComment(event: FormEvent) {
-    event.preventDefault()
-    const comment = postComments
-    comment.push(newComment)
-    setPostComments(comment)
+    setPostComments((prev) => [...prev, commentUser])
+    
+    api.patch(`/posts/:${id}`, {
+      comments: postComments
+    })
   }
 
   return (
@@ -104,7 +108,7 @@ export function Post({ id, author, publishedAt, comments, content, name, role }:
 
         <textarea
           name='comment'
-          value={newComment}
+          value={comment}
           placeholder="Deixe um comentário"
           onChange={handleNewCommentChange}
         />
