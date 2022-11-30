@@ -113,6 +113,13 @@ export default function () {
     },
 
     routes() {
+      this.passthrough("https://ignite-apps.us.auth0.com/login/callback")
+      this.passthrough("https://ignite-apps.us.auth0.com/u/login/**")
+      this.passthrough("https://ignite-apps.us.auth0.com/u/login")
+      this.passthrough("https://ignite-apps.us.auth0.com/**")
+      this.passthrough("https://ignite-apps.us.auth0.com/oauth/token")
+      this.passthrough()
+      
       this.namespace = 'api'
 
       this.get("/posts", (schema) => {
@@ -132,12 +139,7 @@ export default function () {
         return schema.post.find(postId).update(attrs)
       })
       
-      this.passthrough("https://ignite-apps.us.auth0.com/login/callback")
-      this.passthrough("https://ignite-apps.us.auth0.com/u/login/**")
-      this.passthrough("https://ignite-apps.us.auth0.com/u/login")
-      this.passthrough("https://ignite-apps.us.auth0.com/**")
-      this.passthrough("https://ignite-apps.us.auth0.com/oauth/token")
-      this.passthrough()
+
     },
   })
 }
