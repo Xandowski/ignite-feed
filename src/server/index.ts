@@ -1,13 +1,20 @@
-import { createServer, Model } from "miragejs"
+import { Posts } from './../components/Post/Index'
+import { createServer, Model, Registry } from "miragejs"
+import { ModelDefinition } from "miragejs/-types"
+import Schema from "miragejs/orm/schema"
+
+const PostModel: ModelDefinition<Posts> = Model.extend({})
+
+type AppRegistry = Registry<{ post: typeof PostModel }, {} >
+
+type AppSchema = Schema<AppRegistry>;
+
 
 export default function () {
+  
   createServer({
     models: {
-      post: Model,
-
-      // comment: Model.extend({
-      //   post: belongsTo()
-      // }),
+      post: PostModel,
     },
 
     seeds(server) {
@@ -112,35 +119,24 @@ export default function () {
         return schema.posts.all()
       })
 
-      this.get("/posts/:id/comments", (schema, request) => {
-        const postId = request.params.id
-        // const post = schema.posts.find(postId)
+      this.get("/posts/:id/comments", (schema: AppSchema, request) => {
+        const postId = request.params?.id
 
-        return schema.posts.find(postId)
-        // return post.comments
+        return schema.find('post', postId)
       })
 
-      this.patch("/posts/:id", (schema, request) => {
-        const id = request.params.id
+      this.patch("/posts/:id", (schema: AppSchema, request) => {
+        const postId = request.params.id
         const attrs = this.normalizedRequestAttrs()
 
-        return schema.post.find(id).update(attrs)
+        return schema.post.find(postId).update(attrs)
       })
-      // this.post("/posts/:id/comments", (schema, request) => {
-      //   const id = request.params.id
-      //   const post = schema.posts.find(id)
-      //   let data = JSON.parse(request.requestBody)
-      //   data = { ...data, id: (post.comments.length + 1).stringfy }
-
-      //   return schema.comments.create(data)
-      // })
       
       this.passthrough("https://ignite-apps.us.auth0.com/login/callback")
       this.passthrough("https://ignite-apps.us.auth0.com/u/login/**")
       this.passthrough("https://ignite-apps.us.auth0.com/u/login")
       this.passthrough("https://ignite-apps.us.auth0.com/**")
       this.passthrough()
-
     },
   })
 }

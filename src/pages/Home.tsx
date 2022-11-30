@@ -62,7 +62,6 @@ export function Home() {
           {posts.map((post, index) => {
             return (
               <Post
-                id={post.id}
                 key={index}
                 author={post.author}
                 publishedAt={post.publishedAt}

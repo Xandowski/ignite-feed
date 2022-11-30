@@ -18,7 +18,7 @@ export interface Comments {
 }
 
 export interface Posts {
-  id: string
+  id?: string
   author: {
     avatarUrl: string | undefined
     name: string
