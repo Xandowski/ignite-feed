@@ -1,7 +1,7 @@
 import styles from './Avatar.module.css'
 
 interface AvatarProps {
-  src: string
+  src?: string
   alt: string
   hasBorder?: boolean
 }

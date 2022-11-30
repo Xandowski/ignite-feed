@@ -9,7 +9,7 @@ interface CommentProps {
   comment: {
     id?: string
     author: {
-      avatarUrl: string
+      avatarUrl: string | undefined
       name: string
       role: string
     },

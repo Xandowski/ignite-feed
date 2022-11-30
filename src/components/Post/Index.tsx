@@ -1,7 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/esm/locale/pt-BR'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { api } from '../../services/api'
 import { Avatar } from '../Avatar/Index'
 import { Comment } from '../Comment/Index'
@@ -9,7 +9,7 @@ import styles from './Post.module.css'
 
 export interface Comments {
   author: {
-    avatarUrl: string
+    avatarUrl: string | undefined
     name: string
     role: string
   },
@@ -18,7 +18,7 @@ export interface Comments {
 }
 
 export interface Posts {
-  id?: string
+  id: string
   author: {
     avatarUrl: string | undefined
     name: string
@@ -34,7 +34,7 @@ export interface Posts {
 }
 
 export function Post({ id, author, publishedAt, comments, content, name, role }: Posts) {
-  const [postComments, setPostComments] = useState(comments)
+  const [postComments, setPostComments] = useState<Comments[]>(comments)
   const publishedDateFormatted = format(Date.parse(publishedAt), "d 'de' LLLL 'às' HH:mm'h'",
     { locale: ptBR })
   const publishedDateRelativeToNow = formatDistanceToNow(Date.parse(publishedAt), {
@@ -42,7 +42,6 @@ export function Post({ id, author, publishedAt, comments, content, name, role }:
     addSuffix: true
   })
   const { user, isAuthenticated } = useAuth0()
-  const [newComment, setNewComment] = useState<Comments>()
   const [comment, setComment] = useState('')
 
   function handleNewCommentChange(event: FormEvent) {
@@ -59,9 +58,13 @@ export function Post({ id, author, publishedAt, comments, content, name, role }:
         role: role
       },
       content: comment,
-      publishedAt: new Date()
+      publishedAt: new Date().toISOString()
     }
-    setPostComments((prev) => [...prev, commentUser])
+
+    const postCommentsUpdate = postComments
+    postCommentsUpdate.push(commentUser)
+
+    setPostComments(postCommentsUpdate)
     
     api.patch(`/posts/:${id}`, {
       comments: postComments
