@@ -136,6 +136,7 @@ export default function () {
       this.passthrough("https://ignite-apps.us.auth0.com/u/login/**")
       this.passthrough("https://ignite-apps.us.auth0.com/u/login")
       this.passthrough("https://ignite-apps.us.auth0.com/**")
+      this.passthrough("https://ignite-apps.us.auth0.com/oauth/token")
       this.passthrough()
     },
   })
