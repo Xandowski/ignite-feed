@@ -61,10 +61,7 @@ export function Post({ id, author, publishedAt, comments, content, name, role }:
       publishedAt: new Date().toISOString()
     }
 
-    const postCommentsUpdate = postComments
-    postCommentsUpdate.push(commentUser)
-
-    setPostComments(postCommentsUpdate)
+    setPostComments([...postComments, commentUser])
     
     api.patch(`/posts/:${id}`, {
       comments: postComments
