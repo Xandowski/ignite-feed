@@ -40,7 +40,10 @@ export default function () {
               role: 'Educator @Rocketseat'
             },
             content: 'Boa diegão, mandou bem!!',
-            publishedAt: new Date('2022-06-10T20:01:12').toISOString()}
+            publishedAt: new Date('2022-06-10T20:01:12').toISOString(),
+            likes: 2
+          },
+            
         ]
       })
 
@@ -67,7 +70,8 @@ export default function () {
               role: 'Educator @Rocketseat'
             },
             content: 'Boa Maykão, mandou bem!!',
-            publishedAt: new Date('2022-06-10T20:15:30').toISOString()
+            publishedAt: new Date('2022-06-10T20:15:30').toISOString(),
+            likes: 1
           }
         ]
       })
@@ -96,7 +100,8 @@ export default function () {
               role: 'Educator @Rocketseat'
             },
             content: 'Boa Jake, mandou bem!!',
-            publishedAt: new Date('2022-06-10T19:55:12').toISOString()
+            publishedAt: new Date('2022-06-10T19:55:12').toISOString(),
+            likes: 3
           },
           {
             id: '2',
@@ -106,7 +111,8 @@ export default function () {
               role: 'CTO @Rocketseat'
             },
             content: 'Boa Jake, mandou bem!!',
-            publishedAt: new Date('2022-06-10T20:55:12').toISOString()
+            publishedAt: new Date('2022-06-10T20:55:12').toISOString(),
+            likes: 5
           }
         ]
       })
@@ -139,6 +145,11 @@ export default function () {
         return schema.post.find(postId).update(attrs)
       })
       
+      this.delete("/posts/:id/comments/:cid", (schema: AppSchema, request) => {
+        const postId = request.params.id
+        const commentId = request.params.cid
+        return schema.post.find(postId).comment.fin(commentId).destroy()
+      })
 
     },
   })

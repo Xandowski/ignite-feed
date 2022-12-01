@@ -1,24 +1,18 @@
 import styles from './Comment.module.css'
-
-import { FaThumbsUp, FaTrash } from "react-icons/fa";
-import { Avatar } from '../Avatar/Index';
-import { ptBR } from 'date-fns/locale';
-import { format, formatDistanceToNow } from 'date-fns';
+import { FaThumbsUp, FaTrash } from "react-icons/fa"
+import { Avatar } from '../Avatar/Index'
+import { ptBR } from 'date-fns/locale'
+import { format, formatDistanceToNow } from 'date-fns'
+import { Comments } from '../Post/Index'
 
 interface CommentProps {
-  comment: {
-    id?: string
-    author: {
-      avatarUrl: string | undefined
-      name: string
-      role: string
-    },
-    content: string,
-    publishedAt: string,
-  }
+  postId?: string,
+  deleteComment: (id: string) => void,
+  onLikeComment: (likeCount: number, commentId: string) => void,
+  comment: Comments
 }
 
-export function Comment({comment}:CommentProps) {
+export function Comment({comment, deleteComment, onLikeComment}:CommentProps) {
   const publishedDateFormatted = format(Date.parse(comment.publishedAt), "d 'de' LLLL 'às' HH:mm'h'",
   {locale: ptBR})
 
@@ -26,6 +20,14 @@ export function Comment({comment}:CommentProps) {
     locale: ptBR,
     addSuffix: true
   })
+
+  const handleDeleteComment = () => {
+    deleteComment(comment.id)
+  }
+
+  const handleLikeComment = () => {
+    onLikeComment(comment.likes, comment.id)
+  }
 
   return (
     <div className={styles.comment}>
@@ -48,8 +50,8 @@ export function Comment({comment}:CommentProps) {
               </time>
             </div>
 
-            <button title="Deletar comentário" className={styles.delete}>
-              <FaTrash size={20}/>
+            <button title="Deletar comentário" className={styles.delete} onClick={handleDeleteComment}>
+              <FaTrash size={20} />
             </button>
           </header>
 
@@ -57,12 +59,10 @@ export function Comment({comment}:CommentProps) {
         </div>
 
         <footer>
-          <button className={styles.like}>
+          <button className={styles.like} onClick={handleLikeComment}>
             <FaThumbsUp size={20}/>
-            Aplaudir <span>33</span>
+            Aplaudir <span>{comment.likes}</span>
           </button>
-
-          
         </footer>
       </div>
     </div>

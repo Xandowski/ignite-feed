@@ -8,6 +8,7 @@ import { Comment } from '../Comment/Index'
 import styles from './Post.module.css'
 
 export interface Comments {
+  id: string
   author: {
     avatarUrl: string | undefined
     name: string
@@ -15,6 +16,7 @@ export interface Comments {
   },
   content: string,
   publishedAt: string,
+  likes: number
 }
 
 export interface Posts {
@@ -35,6 +37,7 @@ export interface Posts {
 
 export function Post({ id, author, publishedAt, comments, content, name, role }: Posts) {
   const [postComments, setPostComments] = useState<Comments[]>(comments)
+  const [likeComments, setLikeComments] = useState<number>(0)
   const publishedDateFormatted = format(Date.parse(publishedAt), "d 'de' LLLL 'às' HH:mm'h'",
     { locale: ptBR })
   const publishedDateRelativeToNow = formatDistanceToNow(Date.parse(publishedAt), {
@@ -43,22 +46,29 @@ export function Post({ id, author, publishedAt, comments, content, name, role }:
   })
   const { user, isAuthenticated } = useAuth0()
   const [comment, setComment] = useState('')
-
+  
   function handleNewCommentChange(event: FormEvent) {
+    (event.target as HTMLTextAreaElement).setCustomValidity("")
     const comment = (event.target as HTMLTextAreaElement).value
     setComment(comment)
+  }
+
+  function handleNewCommentInvalid(event: FormEvent) {
+    (event.target as HTMLTextAreaElement).setCustomValidity("Esse campo é obrigatório")
   }
 
   function handleCreateNewComment(event: FormEvent) {
     event.preventDefault()
     const commentUser = {
+      id: (postComments.length + 1).toString(),
       author: {
         avatarUrl: user?.picture,
         name: name,
         role: role
       },
       content: comment,
-      publishedAt: new Date().toISOString()
+      publishedAt: new Date().toISOString(),
+      likes: 0
     }
 
     setPostComments([...postComments, commentUser])
@@ -66,7 +76,31 @@ export function Post({ id, author, publishedAt, comments, content, name, role }:
     api.patch(`/posts/:${id}`, {
       comments: postComments
     })
+
+    setComment('')
   }
+
+  function deleteComment(commentId: string) {
+    const comment = postComments.findIndex(element => element.id === commentId)
+    if(!isAuthenticated){
+      return
+    } else if(user?.nickname === postComments[comment].author.name) {
+      setPostComments([...postComments.filter((c) => { return c.id !== commentId && c })])
+
+      api.delete(`/posts/:${id}/comments/:${commentId}`)
+    }
+  }
+
+  function onLikeComment(commentLikes: number, commentId: string) {
+    setPostComments([...postComments.map((c) => {
+      if(c.id === commentId){
+        c.likes = commentLikes + 1
+      }
+      return c
+    })])
+  }
+
+  const isNewCommentEmpty = comment.length === 0
 
   return (
     <article className={styles.post}>
@@ -111,17 +145,25 @@ export function Post({ id, author, publishedAt, comments, content, name, role }:
           value={comment}
           placeholder="Deixe um comentário"
           onChange={handleNewCommentChange}
+          required
+          onInvalid={handleNewCommentInvalid}
         />
 
         <footer>
-          {isAuthenticated && <button type="submit">Publicar</button>}
+          {isAuthenticated && <button type="submit" disabled={isNewCommentEmpty}>Publicar</button>}
         </footer>
       </form>
 
       <div className={styles.commentList}>
         {postComments?.map((comment) => {
           return (
-            <Comment comment={comment} />
+            <Comment 
+              key={comment.publishedAt} 
+              postId={id} 
+              comment={comment}
+              deleteComment={deleteComment}
+              onLikeComment={onLikeComment}
+            />
           )
         })}
       </div>

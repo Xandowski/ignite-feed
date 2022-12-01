@@ -20,14 +20,14 @@
   gap: 1rem;
 }
 
-.authorInfo{
+.authorInfo {
   height: 100%;
   display: flex;
   justify-content: space-evenly;
   flex-direction: column;
 }
 
-.authorInfo strong{
+.authorInfo strong {
   color: var(--gray-100);
   line-height: 1.6;
 }
@@ -53,7 +53,7 @@
   margin-top: 1rem;
 }
 
-.content a{
+.content a {
   color: var(--green-500);
   font-weight: 700;
   transition: color 0.2s;
@@ -95,7 +95,7 @@
 }
 
 .commentForm textarea:hover {
-  border: 2px solid var(--green-500)
+  border: 2px solid var(--green-500);
 }
 
 .commentForm > footer {
@@ -108,7 +108,7 @@
   max-height: none;
 }
 
-.commentForm > footer button[type=submit] {
+.commentForm > footer button[type="submit"] {
   padding: 1rem 1.5rem;
   margin-top: 1rem;
   background-color: var(--green-500);
@@ -119,8 +119,14 @@
   transition: background-color 0.5s;
 }
 
-.commentForm > footer button[type=submit]:hover {
+.commentForm > footer button[type="submit"]:not(:disabled):hover {
   background-color: var(--green-400);
+}
+
+.commentForm > footer button[type="submit"]:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background: var(--gray-600);
 }
 
 .commentList {
